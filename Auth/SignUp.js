@@ -14,7 +14,7 @@ const SignUp = ({ navigation }) => {
     setShowPassword(!showPassword);
   };
   const handleSignUp = async () => {
-    if (pass === passrp) {
+  if (pass === passrp) {
       try {
         const { user } = await auth().createUserWithEmailAndPassword(email, pass);
         await firestore().collection('users').doc(user.uid).set({

@@ -16,7 +16,7 @@ const Login = ({navigation}) => {
         setShowPassword(!showPassword);
       };
       const HandleLogin = () =>{
-        if(email && pass != null){
+        if(email || pass != null){
             loginUser(email, pass);
             setEmail("");
             setPass("");
