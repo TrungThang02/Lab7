@@ -10,6 +10,7 @@ import Home from './Home/Home';
 import Router from './Router';
 import AddService from './Home/AddService';
 import Logout from './Home/Logout';
+import Service from './Home/Service';
 import { UserProvider } from './context/UseContext';
 
 const Stack = createStackNavigator();
@@ -21,6 +22,8 @@ const App = () => {
       email: 'thangpy2k2@gmail.com',
       password: '123123',
       role: 'admin',
+      address:'Phu Yen',
+      age:'22'
     };
 
     await ref.doc(admin.email).onSnapshot((u) => {
@@ -46,6 +49,7 @@ const App = () => {
        <Router/>
     </NavigationContainer>
     </UserProvider>
+  
   );
 };
 

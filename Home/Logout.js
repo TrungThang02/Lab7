@@ -30,15 +30,15 @@ const Logout = ({navigation}) => {
     return (
         <View style={styles.container}>
                <Pressable 
-                style={{backgroundColor: "red", 
-                alignItems:'center',
-                padding: 15, 
-                borderRadius:10, 
-                width:150
-               }}
+                // style={{backgroundColor: "red", 
+                // alignItems:'center',
+                // padding: 15, 
+                // borderRadius:10, 
+                // width:150
+            //    }}
     
                onPress={handleLogout}>
-                  <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>Logout</Text>
+                  <Text style={{color: '#333', fontSize: 15, fontWeight: 'bold'}}>Tính năng đang được phát triển !</Text>
                 </Pressable>
         </View>
     );

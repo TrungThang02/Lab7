@@ -17,8 +17,11 @@ const SignUp = ({ navigation }) => {
   if (pass === passrp) {
       try {
         const { user } = await auth().createUserWithEmailAndPassword(email, pass);
-        await firestore().collection('users').doc(user.uid).set({
+        await firestore().collection('users').doc(user.email).set({
           email: user.email,
+          age :'0',
+          address:'abc',
+          role:'user'
         });
         navigation.navigate("Login");
 

@@ -12,7 +12,8 @@ import { Home } from '../Home/Home';
 import Service from './Service';
 import AddService from './AddService';
 import Logout from './Logout';
-
+import Setting from './Setting';
+import Orders from './Orders';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
@@ -40,8 +41,8 @@ const MyTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Transaction"
-        component={Logout}
+        name="Orders"
+        component={Orders}
         options={{
           tabBarIcon: getTabBarIcon('attach-money'),
         }}
@@ -55,7 +56,7 @@ const MyTabs = () => {
       />
       <Tab.Screen
         name="Setting"
-        component={Logout}
+        component={Setting}
         options={{
           tabBarIcon: getTabBarIcon('settings'),
         }}

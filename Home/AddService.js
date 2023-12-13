@@ -12,7 +12,7 @@ const AddService = ({navigation}) => {
    const addService = async () => {
     try {
       if (!service || !price) {
-        // Alert.alert('Error', 'Service name and price are required');
+      
         return;
       }
       const priceValue = parseFloat(price);

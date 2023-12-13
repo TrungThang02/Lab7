@@ -12,6 +12,9 @@ import AddService from './Home/AddService';
 import DetailService from './Home/DetailsService';
 import EditService from './Home/EditService';
 import Logout from './Home/Logout';
+import ChangeInfo from './Home/ChangeInfo';
+import Info from './Home/Info';
+import Orders from './Home/Orders';
 const Stack = createStackNavigator();
 
 const Router = ({ navigation }) => {
@@ -25,7 +28,9 @@ const Router = ({ navigation }) => {
       <Stack.Screen name="EditService" component={EditService} />
       <Stack.Screen name="Logout" component={Logout} options={{ headerShown: false }} />
       <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-
+      <Stack.Screen name="ChangeInfo" component={ChangeInfo} />
+      <Stack.Screen name="Info" component={Info} />
+      <Stack.Screen name="Orders" component={Orders} />
     </Stack.Navigator>
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList, Pressable, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-
+import { Searchbar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ScrollView } from 'react-native-virtualized-view'
 import { UserProvider, UserContext } from '../context/UseContext';
@@ -9,6 +9,9 @@ import { UserProvider, UserContext } from '../context/UseContext';
 const Service = ({ navigation }) => {
     const [services, setServices] = useState([]);
     const { userInfo } = useContext(UserContext);
+    const [filterServices, setfilterServices] = useState([]);
+
+
 
     useEffect(() => {
         const unsubscribe = firestore().collection('services').onSnapshot((snapshot) => {
@@ -17,6 +20,7 @@ const Service = ({ navigation }) => {
                 ...doc.data(),
             }));
             setServices(servicesData);
+            setfilterServices(servicesData);
         });
 
         return () => unsubscribe();
@@ -59,23 +63,50 @@ const Service = ({ navigation }) => {
         }
     };
 
+    const handleSearch = (query) => {
+        const filterData = services.filter((service) =>
+            service.serviceName.toLowerCase().includes(query.toLowerCase())
+        );
+        setfilterServices(filterData);
+    };
+
+
     return (
         <View>
+            <View style={{ width: "95%", alignItems: 'center', alignSelf: 'center', margin: 10 }}>
+                <Searchbar
+                    style={{
+                        ...styles.item,
+                        padding: 2,
+                        backgroundColor: 'transparent',
+                        margin: 0,
+                        height: 60,
+                        justifyContent: 'center',
+                    }}
+                    placeholder="Tim kiem..."
+                    onChangeText={handleSearch}
+                />
+            </View>
             <View style={styles.container}>
+
                 <View>
-                    <Text style={{ fontWeight: '600' }}>Danh sách dịch vụ</Text>
+
+                    <Text style={{ fontWeight: '600', color: 'black' }}>Danh sách dịch vụ</Text>
+
                 </View>
+
                 {userInfo && userInfo.role === 'admin' ? (
                     <TouchableOpacity onPress={() => navigation.navigate('AddService')}>
                         <Text>
                             <Icon name="add-circle" size={45} style={{ color: 'red' }} />
                         </Text>
                     </TouchableOpacity>
-                ):null}
+                ) : null}
             </View>
             <ScrollView>
                 <FlatList
-                    data={services}
+                    style={{ marginBottom: 150 }}
+                    data={filterServices}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View style={{ flexDirection: 'row', margin: 5 }}>
@@ -83,8 +114,8 @@ const Service = ({ navigation }) => {
                                 <TouchableOpacity onPress={() => handleDetails(item)}>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <View>
-                                            <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{item.serviceName}</Text>
-                                            <Text>{item.price + " đ"}</Text>
+                                            <Text style={{ fontSize: 17, fontWeight: 'bold', color: 'black' }}>{item.serviceName}</Text>
+                                            <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'black' }}>{item.price + " vnđ"}</Text>
                                         </View>
                                         {userInfo && userInfo.role === 'admin' && (
                                             <View style={{ flexDirection: 'row' }}>
@@ -119,14 +150,17 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 20,
+        padding: 10,
+
     },
     item: {
         width: '100%',
         borderWidth: 1,
-        padding: 15,
+        padding: 10,
+        height: 80,
         borderColor: 'gray',
         borderRadius: 10,
+        justifyContent: 'center'
     }
 });
 
