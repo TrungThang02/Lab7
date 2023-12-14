@@ -15,6 +15,7 @@ import Logout from './Home/Logout';
 import ChangeInfo from './Home/ChangeInfo';
 import Info from './Home/Info';
 import Orders from './Home/Orders';
+import OrderDetails from './Home/OrderDetails';
 const Stack = createStackNavigator();
 
 const Router = ({ navigation }) => {
@@ -31,6 +32,7 @@ const Router = ({ navigation }) => {
       <Stack.Screen name="ChangeInfo" component={ChangeInfo} />
       <Stack.Screen name="Info" component={Info} />
       <Stack.Screen name="Orders" component={Orders} />
+      <Stack.Screen name="OrdersDetails" component={OrderDetails} />
     </Stack.Navigator>
 
 

@@ -72,7 +72,7 @@ const Service = ({ navigation }) => {
 
 
     return (
-        <View>
+        <View style={{backgroundColor:'#fff'}}>
             <View style={{ width: "95%", alignItems: 'center', alignSelf: 'center', margin: 10 }}>
                 <Searchbar
                     style={{
@@ -148,6 +148,7 @@ const Service = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+       
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 10,
