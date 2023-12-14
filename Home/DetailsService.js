@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext} from 'react';
-import { View, Text, Alert, Pressable, Modal, TextInput, TouchableHighlight } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, Alert, Pressable, Modal, TouchableHighlight } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import firestore from '@react-native-firebase/firestore';
 import { UserProvider, UserContext } from '../context/UseContext';
-const DetailService = ({ route, navigation}) => {
+const DetailService = ({ route, navigation }) => {
   const { serviceName, price } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -44,16 +45,14 @@ const DetailService = ({ route, navigation}) => {
         status: 'pending',
         email: userInfo.email
       });
-      console.log('Order Successfully for', serviceName, 'on', selectedDate.toDateString());
-
-      Alert.alert("Success", `Order Successfully ${serviceName}}`);
+      Alert.alert("Success", `Order Successfully ${serviceName}`);
       setPhoneNumber('');
       setCustomerName('');
       setSelectedDate(new Date());
       setShowOrderModal(false);
     } catch (error) {
-      console.error('Error adding order to Firestore:', error);
-      Alert.alert("Error", "Failed to place the order. Please try again.");
+      // console.error('Error adding order to Firestore:', error);
+      // Alert.alert("Error", "Failed to place the order. Please try again.");
     }
   };
 
@@ -72,8 +71,7 @@ const DetailService = ({ route, navigation}) => {
         onConfirm={handleDateChange}
         onCancel={hideDatePicker}
       />
-
-      <TouchableHighlight
+      {userInfo.role !== 'admin' ? (<TouchableHighlight
         onPress={OrderService}
         style={{
           backgroundColor: "red",
@@ -84,11 +82,10 @@ const DetailService = ({ route, navigation}) => {
         }}
       >
         <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Order Now</Text>
-      </TouchableHighlight>
-
+      </TouchableHighlight>) : null}
       {showOrderModal && (
         <Modal
-         
+
           animationType="slide"
           transparent={true}
           visible={showOrderModal}
@@ -96,59 +93,49 @@ const DetailService = ({ route, navigation}) => {
             setShowOrderModal(false);
           }}
         >
-          <View style={{flex:1, height:200,justifyContent: 'center', alignItems: 'center', backgroundColor:'#fff' }}>
+          <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff', fontWeight: 'bold' }}>
+            <Text style={{ color: 'red', fontSize: 20, alignSelf: 'center' }}>CONFIRM ORDER !</Text>
+            <TouchableHighlight
+              onPress={showDatePicker}
+              style={{
+                backgroundColor: 'transparent', borderWidth: 1, borderColor: '#333',
 
-          <TouchableHighlight
-        onPress={showDatePicker}
-        style={{
-          backgroundColor: "red",
-          alignItems: 'center',
-          padding: 15,
-          borderRadius: 10,
-          margin: 10,
-        }}
-      >
-        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Select Date</Text>
-      </TouchableHighlight>
-            <Text style={{ fontSize: 16, marginBottom: 10 }}>Selected Date: {selectedDate.toDateString()}</Text>
-            <TextInput
-              style={{
-                height: 40,
-                borderColor: 'gray',
-                borderWidth: 1,
-                marginBottom: 10,
-                padding: 10,
-                width: 200,
+                padding: 15,
+                borderRadius: 10,
+                margin: 10,
               }}
-              placeholder="Phone Number"
-              keyboardType="phone-pad"
-              onChangeText={text => setPhoneNumber(text)}
-              value={phoneNumber}
-            />
-            <TextInput
-              style={{
-                height: 40,
-                borderColor: 'gray',
-                borderWidth: 1,
-                marginBottom: 10,
-                padding: 10,
-                width: 200,
-              }}
-              placeholder="Customer Name"
-              onChangeText={text => setCustomerName(text)}
-              value={customerName}
-            />
-             {/* <TouchableHighlight
-             onPress={() => navigation.goBack()}
-              style={{ backgroundColor: "red", padding: 10, borderRadius: 10 }}
             >
-              <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Confirm Order</Text>
-            </TouchableHighlight> */}
+              <Text style={{ color: '#333', fontSize: 18, }}>Please selected date !</Text>
+            </TouchableHighlight>
+            <View>
+              <Text style={{ fontSize: 16, marginBottom: 10, marginLeft: 10 }}>Selected Date: {selectedDate.toDateString()}</Text>
+              <TextInput
+                style={{ margin: 10, backgroundColor: 'transparent', borderWidth: 1, borderColor: '#333', borderRadius: 10 }}
+                underlineColor='transparent'
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
+                onChangeText={text => setPhoneNumber(text)}
+                value={phoneNumber}
+              />
+              <TextInput
+                style={{ margin: 10, borderRadius: 10, backgroundColor: 'transparent', borderWidth: 1, borderColor: '#333' }}
+                placeholder="Customer Name"
+                underlineColor='transparent'
+                onChangeText={text => setCustomerName(text)}
+                value={customerName}
+              />
+            </View>
             <TouchableHighlight
               onPress={handleOrderConfirm}
-              style={{ backgroundColor: "red", padding: 10, borderRadius: 10 }}
+              style={{
+                backgroundColor: "green",
+                alignItems: 'center',
+                padding: 15,
+                borderRadius: 10,
+                margin: 10,
+              }}
             >
-              <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Confirm Order</Text>
+              <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Confirm Order</Text>
             </TouchableHighlight>
           </View>
         </Modal>

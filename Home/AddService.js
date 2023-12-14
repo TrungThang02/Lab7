@@ -4,35 +4,62 @@ import { View, StyleSheet, Alert, Pressable, Text, FlatList} from 'react-native'
 import { TextInput, Button } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+// import storage from '@react-native-firebase/storage';
+import ImagePicker from 'react-native-image-picker';
 
 const AddService = ({navigation}) => {
    const [service, setService] = useState("");
    const [price, setPrice] = useState("");
+   const [imageUri, setImageUri] = useState(null);
 
-   const addService = async () => {
+   const pickImage = () => {
+    ImagePicker.showImagePicker({ title: 'Select Image', mediaType: 'photo' }, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setImageUri(response.uri);
+      }
+    });
+  };
+  
+  const addService = async () => {
     try {
       if (!service || !price) {
-      
         return;
       }
       const priceValue = parseFloat(price);
       if (isNaN(priceValue)) {
-        Alert.alert("","Invalid number");
+        Alert.alert('', 'Invalid number');
         return;
       }
+  
+      let imageUrl = null;
+      if (imageUri) {
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+  
+        const storageRef = storage().ref(`serviceImages/${service}-${Date.now()}`);
+        await storageRef.put(blob);
+        imageUrl = await storageRef.getDownloadURL();
+      }
+  
       await firestore().collection('services').add({
         serviceName: service,
         price: priceValue,
-        
+        imageUrl,
       });
-      navigation.navigate("Home")
-      // setService('');
-      // setPrice('');
-
+  
+      navigation.navigate('Home');
+      setService('');
+      setPrice('');
+      setImageUri(null);
     } catch (error) {
-      
+      console.error('Error adding service:', error);
     }
   };
+  
 
     return (
         <View style={{justifyContent:'center', margin:10, borderRadius:20}}>
@@ -53,7 +80,17 @@ const AddService = ({navigation}) => {
                 onChangeText={price => setPrice(price)}
 
             />
-           
+             <Pressable onPress={pickImage} style={{ alignItems: 'center', margin: 10 }}>
+        <Text style={{ color: 'blue' }}>Select Image</Text>
+      </Pressable>
+
+           {imageUri && (
+  <Image
+    source={{ uri: imageUri }}
+    style={{ width: 200, height: 200, borderRadius: 10, margin: 10 }}
+  />
+)}
+
             <View style={{justifyContent: 'center', padding: 10 }}>
                 <Pressable 
                 onPress={addService}

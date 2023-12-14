@@ -8,6 +8,7 @@ const OrdersDetails = ({ navigation, route }) => {
     selectedDate, 
     phoneNumber,
     customerName,
+    email
   } = route.params;
 
   return (
