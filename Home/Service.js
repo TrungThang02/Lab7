@@ -30,6 +30,7 @@ const Service = ({ navigation }) => {
         navigation.navigate('DetailsService', {
             serviceName: service.serviceName,
             price: service.price,
+            imageUrl: service.imageUrl
         });
     };
 
@@ -152,6 +153,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 10,
+        height: "100%"
 
     },
     item: {

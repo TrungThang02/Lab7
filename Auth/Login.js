@@ -27,7 +27,7 @@ const Login = ({ navigation }) => {
     }
     return (
         <View style={{ flex: 1, justifyContent: 'center', margin: 10, borderRadius: 20 }}>
-            <Text style={{ color: 'red', fontSize: 25, fontWeight: 'bold', alignSelf: 'center' }}>TRAN TRUNG THANG</Text>
+            {/* <Text style={{ color: 'red', fontSize: 25, fontWeight: 'bold', alignSelf: 'center' }}>TRAN TRUNG THANG</Text> */}
             <TextInput
                 style={{ ...styles.TextInput, margin: 10, borderRadius: 10 }}
                 label="Email"

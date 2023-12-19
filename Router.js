@@ -20,6 +20,7 @@ const Stack = createStackNavigator();
 
 const Router = ({ navigation }) => {
   return (
+    // <AddService/>
     <Stack.Navigator>
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />

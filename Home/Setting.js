@@ -65,7 +65,7 @@ const Setting = ({ navigation }) => {
   };
 
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={{ backgroundColor: 'white',height: "100%" }}>
       <Pressable onPress={handleInfo}>
         <View
           style={{
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+   
   },
   text: {
     fontFamily: 'Arial',

@@ -1,15 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import {
-  FlatList,
-  Text,
-  View,
-  StyleSheet,
-  Modal,
-  TouchableOpacity,
-  Alert,
-  Pressable,
-  TouchableHighlight,
-} from 'react-native';
+import { FlatList,Text,View,StyleSheet,Modal,TouchableOpacity,Alert,Pressable,TouchableHighlight} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { TextInput } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';

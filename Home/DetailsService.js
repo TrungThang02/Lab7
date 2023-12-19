@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Alert, Pressable, Modal, TouchableHighlight } from 'react-native';
+import { View, Text, Alert, Pressable, Modal, TouchableHighlight, Image } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import firestore from '@react-native-firebase/firestore';
 import { UserProvider, UserContext } from '../context/UseContext';
 const DetailService = ({ route, navigation }) => {
-  const { serviceName, price } = route.params;
+  const { serviceName, price, imageUrl } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
@@ -26,7 +26,7 @@ const DetailService = ({ route, navigation }) => {
     if (date && date >= new Date()) {
       setSelectedDate(date);
     } else {
-      Alert.alert("Invalid Date", "Please select a future date.");
+      Alert.alert("", "Invalid Date");
     }
   };
 
@@ -46,10 +46,11 @@ const DetailService = ({ route, navigation }) => {
         email: userInfo.email
       });
       Alert.alert("Success", `Order Successfully ${serviceName}`);
-      setPhoneNumber('');
-      setCustomerName('');
-      setSelectedDate(new Date());
-      setShowOrderModal(false);
+      // setPhoneNumber('');
+      // setCustomerName('');
+      // setSelectedDate(new Date());
+      // setShowOrderModal(false);
+        navigation.navigate("Orders")
     } catch (error) {
       // console.error('Error adding order to Firestore:', error);
       // Alert.alert("Error", "Failed to place the order. Please try again.");
@@ -63,7 +64,11 @@ const DetailService = ({ route, navigation }) => {
         <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'black' }}>Price: {price}</Text>
       </View>
 
-
+    
+  <Image
+    source={{ uri: imageUrl }}
+    style={{ width: "400", height: 200, borderRadius: 10, margin: 10 }}
+  />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"

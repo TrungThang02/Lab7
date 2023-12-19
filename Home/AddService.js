@@ -1,11 +1,10 @@
 import React, { useState, useEffect} from 'react';
-
-import { View, StyleSheet, Alert, Pressable, Text, FlatList} from 'react-native';
+import { View, StyleSheet, Alert, Pressable, Text, FlatList, Image} from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-// import storage from '@react-native-firebase/storage';
-import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const AddService = ({navigation}) => {
    const [service, setService] = useState("");
@@ -13,16 +12,19 @@ const AddService = ({navigation}) => {
    const [imageUri, setImageUri] = useState(null);
 
    const pickImage = () => {
-    ImagePicker.showImagePicker({ title: 'Select Image', mediaType: 'photo' }, (response) => {
+    launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setImageUri(response.uri);
+
+        setImageUri(response.assets[0].uri);
+        console.log(response.assets[0].uri)
       }
     });
   };
+  
   
   const addService = async () => {
     try {
@@ -40,7 +42,7 @@ const AddService = ({navigation}) => {
         const response = await fetch(imageUri);
         const blob = await response.blob();
   
-        const storageRef = storage().ref(`serviceImages/${service}-${Date.now()}`);
+        const storageRef = storage().ref(`Images/${service}-${Date.now()}`);
         await storageRef.put(blob);
         imageUrl = await storageRef.getDownloadURL();
       }
@@ -59,8 +61,6 @@ const AddService = ({navigation}) => {
       console.error('Error adding service:', error);
     }
   };
-  
-
     return (
         <View style={{justifyContent:'center', margin:10, borderRadius:20}}>
             <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Service name * </Text>
@@ -87,7 +87,7 @@ const AddService = ({navigation}) => {
            {imageUri && (
   <Image
     source={{ uri: imageUri }}
-    style={{ width: 200, height: 200, borderRadius: 10, margin: 10 }}
+    style={{ width: "400", height: 200, borderRadius: 10, margin: 10 }}
   />
 )}
 
