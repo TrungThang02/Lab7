@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Text, Pressable, Alert, Image } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const EditService = ({ route, navigation }) => {
   const { id } = route.params;
   const [service, setService] = useState("");
   const [price, setPrice] = useState("");
-
+  const [imageUri, setImageUri] = useState(null);
   useEffect(() => {
     const fetchServiceDetails = async () => {
       try {
@@ -16,6 +18,7 @@ const EditService = ({ route, navigation }) => {
           const serviceData = serviceDoc.data();
           setService(serviceData.serviceName);
           setPrice(serviceData.price.toString());
+          setImageUri(serviceData.imageUrl);
         }
       } catch (error) {
        
@@ -24,7 +27,19 @@ const EditService = ({ route, navigation }) => {
 
     fetchServiceDetails();
   }, [id]);
+  const pickImage = () => {
+    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
 
+        setImageUri(response.assets[0].uri);
+       
+      }
+    });
+  };
   const handleUpdate = async () => {
     try {
       const priceValue = parseFloat(price);
@@ -32,10 +47,20 @@ const EditService = ({ route, navigation }) => {
         Alert.alert('', 'Invalid number');
         return;
       }
-
+      let imageUrl = null;
+      if (imageUri) {
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+  
+        const storageRef = storage().ref(`Images/${service}-${Date.now()}`);
+        await storageRef.put(blob);
+        imageUrl = await storageRef.getDownloadURL();
+      }
+  
       await firestore().collection('services').doc(id).update({
         serviceName: service,
         price: priceValue,
+        imageUrl,
       });
       navigation.goBack();
     } catch (error) {
@@ -61,7 +86,15 @@ const EditService = ({ route, navigation }) => {
         underlineColor='transparent'
         onChangeText={price => setPrice(price)}
       />
-
+      <Pressable onPress={pickImage} style={{ alignItems: 'center', margin: 10 }}>
+        <Text style={{ color: 'blue' }}>Select Image</Text>
+      </Pressable>
+      {imageUri && (
+  <Image
+    source={{ uri: imageUri }}
+    style={{ width: "400", height: 200, borderRadius: 10, margin: 10 }}
+  />
+)}
       <View style={{ justifyContent: 'center', padding: 10 }}>
         <Pressable
           onPress={handleUpdate}
